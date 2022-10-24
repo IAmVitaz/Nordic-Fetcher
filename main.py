@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, date
 
+from appointment import Appointment
+
 dateShift = 10
 
 def dateToStr(date: datetime) -> str:
@@ -15,7 +17,7 @@ datesToFetch = []
 for i in range(dateShift):
     datesToFetch.append(dateToStr(today + timedelta(days=i+1)))
 
-availableTimes = []
+availableAppointments = []
 
 query = {'action':'availableTimes', 'showSelect':'0', 'fulldate':'1', 'owner':'18896876'}
 
@@ -27,13 +29,15 @@ for date in datesToFetch:
     # parse the HTML
     soup = BeautifulSoup(response.text, "html.parser")
 
-
     times = soup.find_all("input", class_="time-selection")
-    for time in times:
-        availableTimes.append(time['value'])
-        print(time['value'])
+    for dataPoint in times:
+        date = dataPoint['data-readable-date']
+        time = dataPoint['value'].split(" ").pop()
+        spotsAvailable = dataPoint['data-available']
+        appointment = Appointment(date=date, time=time, numberOfSpots=spotsAvailable)
+        availableAppointments.append(appointment)
 
 
-
-
-print(availableTimes)
+for apt in availableAppointments:
+    aptString = "" + apt.date + " " + apt.time + " " + apt.numberOfSpots
+    print(aptString)
