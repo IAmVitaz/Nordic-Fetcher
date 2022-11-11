@@ -20,7 +20,7 @@
         font-size: 24pt;
     }
 
-    #timestamp {
+    #date {
         color: gray;
         font-size: 20pt;
         margin-top: 50px;
@@ -35,5 +35,14 @@
         {{logs}}
         {% endautoescape %}
     </p>
-    <p id="timestamp">Last updated: {{ timestamp }}</p>
+    <p id="date">
+        <script>
+            var date = new Date();
+            const options = { month: 'short', day: 'numeric' };
+            var currentDate = date.toLocaleDateString(undefined, options);
+            var currentTime = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+            var lastUpdatedString = "Last updated: " + currentDate + ", " + currentTime;
+            document.getElementById("date").innerHTML = lastUpdatedString;
+        </script>
+    </p>
 </div>

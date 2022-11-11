@@ -11,10 +11,8 @@ def index():
     availableSpots = fetcher.getAvailableTimeSlots()
     availableSpots = availableSpots.replace("\n", " <br> ")
 
-    timestamp = datetime.today().strftime('%d-%b %H:%M:%S')
-
     # Render HTML with count variable
-    return render_template("index.html", logs = availableSpots, timestamp = timestamp)
+    return render_template("index.html", logs = availableSpots)
 
 if __name__ == "__main__":
     app.run()
