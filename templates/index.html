@@ -22,6 +22,11 @@
 </style>
 
 <div>
-    <h1>Welcome!</h1><br>
-    <p>You are about to see nordic spa slots here!</p>
+    <h1>Nordic Watcher</h1><br>
+    <p>Here are the spots available for next 10 days:</p>
+    <p> 
+        {% autoescape false %}
+        {{logs}}
+        {% endautoescape %}
+    </p>
 </div>
