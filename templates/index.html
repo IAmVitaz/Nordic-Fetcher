@@ -19,14 +19,21 @@
     p {
         font-size: 24pt;
     }
+
+    #timestamp {
+        color: gray;
+        font-size: 20pt;
+        margin-top: 50px;
+    }
 </style>
 
 <div>
     <h1>Nordic Watcher</h1><br>
-    <p>Here are the spots available for next 10 days:</p>
+    <p>Here are the spots available for the next 10 days:</p>
     <p> 
         {% autoescape false %}
         {{logs}}
         {% endautoescape %}
     </p>
+    <p id="timestamp">Last updated: {{ timestamp }}</p>
 </div>
