@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %} 
+<div>
+    <h1 class="text-center text-primary mt-2 mb-4">Nordic Watcher</h1>
+    <p class="text-center">Here are the spots available for the next 10 days:</p>
+    <!-- <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Date</th>
+            <th scope="col">Time</th>
+            <th scope="col">№ spots</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+        </tbody>
+      </table> -->
+    
+    <p class="text-center"> 
+        {% autoescape false %}
+        {{logs}}
+        {% endautoescape %}
+    </p>
+    <p id="date" class="blockquote-footer text-center">
+        <script>
+            var date = new Date();
+            const options = { month: 'short', day: 'numeric' };
+            var currentDate = date.toLocaleDateString(undefined, options);
+            var currentTime = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+            var lastUpdatedString = "Last updated: " + currentDate + ", " + currentTime;
+            document.getElementById("date").innerHTML = lastUpdatedString;
+        </script>
+    </p>
+</div>
+{% endblock %}
