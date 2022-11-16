@@ -7,6 +7,5 @@ views = Blueprint('views', __name__)
 def home():
     fetcher = TimeFetcher()
     availableSpots = fetcher.getAvailableTimeSlots()
-    availableSpots = availableSpots.replace("\n", " <br> ")
 
-    return render_template("home.html", logs = availableSpots)
+    return render_template("home.html", appointments = availableSpots)

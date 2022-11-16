@@ -4,39 +4,36 @@
 <div>
     <h1 class="text-center text-primary mt-2 mb-4">Nordic Watcher</h1>
     <p class="text-center">Here are the spots available for the next 10 days:</p>
-    <!-- <table class="table">
-        <thead>
+    <table class="table table-hover table-bordered">
+        <caption id="date">
+            <script>
+                var date = new Date();
+                const options = { month: 'short', day: 'numeric' };
+                var currentDate = date.toLocaleDateString(undefined, options);
+                var currentHours = ("0" + date.getHours()).slice(-2);
+                var currentMinutes = ("0" + date.getMinutes()).slice(-2);
+                var currentSeconds = ("0" + date.getSeconds()).slice(-2);
+                var currentTime = currentHours + ':' + currentMinutes + ':' + currentSeconds;
+                var lastUpdatedString = "Last updated: " + currentDate + ", " + currentTime;
+                document.getElementById("date").innerHTML = lastUpdatedString;
+            </script>    
+        </caption>
+        <thead class="table-dark">
           <tr>
-            <th scope="col">#</th>
             <th scope="col">Date</th>
             <th scope="col">Time</th>
             <th scope="col">№ spots</th>
           </tr>
         </thead>
+        {% for apt in appointments %} 
         <tbody>
           <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+            <td>{{ apt.date }}</td>
+            <td>{{ apt.time }}</td>
+            <td>{{ apt.numberOfSpots }}</td>
           </tr>
         </tbody>
-      </table> -->
-    
-    <p class="text-center"> 
-        {% autoescape false %}
-        {{logs}}
-        {% endautoescape %}
-    </p>
-    <p id="date" class="blockquote-footer text-center">
-        <script>
-            var date = new Date();
-            const options = { month: 'short', day: 'numeric' };
-            var currentDate = date.toLocaleDateString(undefined, options);
-            var currentTime = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-            var lastUpdatedString = "Last updated: " + currentDate + ", " + currentTime;
-            document.getElementById("date").innerHTML = lastUpdatedString;
-        </script>
-    </p>
+        {% endfor %} 
+    </table>
 </div>
 {% endblock %}

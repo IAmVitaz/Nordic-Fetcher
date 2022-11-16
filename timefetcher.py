@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, date
+from typing import List
 
 from appointment import Appointment
 
@@ -11,7 +12,7 @@ class TimeFetcher:
     def dateToStr(self, date: datetime) -> str:
         return date.strftime('%Y-%m-%d')
 
-    def getAvailableTimeSlots(self) -> str:
+    def getAvailableTimeSlots(self) -> list[Appointment]:
 
         today = datetime.today()
         tomorrow = today + timedelta(days=self._dateShift)
@@ -47,4 +48,4 @@ class TimeFetcher:
             output += "" + apt.date + " " + apt.time + " " + apt.numberOfSpots + "\n"
         
         print(output)
-        return output
+        return availableAppointments
