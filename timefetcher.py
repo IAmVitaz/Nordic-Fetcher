@@ -20,7 +20,7 @@ class TimeFetcher:
         datesToFetch = []
 
         for i in range(self._dateShift):
-            datesToFetch.append(self.dateToStr(today + timedelta(days=i+1)))
+            datesToFetch.append(self.dateToStr(today + timedelta(days=i)))
 
         availableAppointments = []
 
