@@ -15,12 +15,12 @@ def home():
 
     return render_template("home.html", appointments = availableSpots)
 
-@views.route('/load_appointments', methods=['POST'])
-async def load_appointments():
+@views.route('/load_appointments/<socketId>', methods=['POST'])
+async def load_appointments(socketId):
 
     for x in range(1,6):
-        socketio.emit("update progress", x*20)
-        await sleep(2)
+        socketio.emit("update progress", x*20, to=socketId)
+        await sleep(1)
 
     return Response(status=204)
 

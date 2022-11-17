@@ -6,37 +6,54 @@
     <script type="text/javascript">
         window.onload = function() {
             const socket = io();
+            let socketId = undefined;
+            let progressBarValue = document.getElementById("progressBarValue")
+            let progressBar = document.getElementById("progressBar")
+            let table = document.getElementById("tableWithAppointments")
+
             socket.connect('https://localhost');
             socket.on("connect", function() {
                 console.log("Connected")
+                socketId = socket.id;
+                console.log("SocketId: " + socketId)
                 loadAppointments();
             })
-            let progressBar = document.getElementById("progressBar")
             socket.on("update progress", function(percentage){
                 console.log("Got percent: " + percentage)
-                progressBar.style.width = percentage + "%"
+                progressBarValue.style.width = percentage + "%"
             })
 
             function loadAppointments() {
-                fetch("/load_appointments", {
+                fetch("/load_appointments/" + socketId, {
                     method: "POST"
                 }).then(response => {
                     setTimeout(function() {
-                        progressBar.style.width = "0%";
-                    }, 1000);
+                        showTable();
+                        progressBarValue.style.width = "0%";
+                    }, 0);
                 });
             } 
 
-            document.getElementById ("resource-name").addEventListener ("click", doSOmething, false);
+            function showProgress() {
+                progressBar.style.display = "flex"
+                table.style.display = "none"
+            } 
+
+            function showTable() {
+                progressBar.style.display = "none"
+                table.style.display = "table"
+            } 
+
+            showProgress();
         }
     </script>    
 
     <h1 id="resource-name" class="text-center text-primary mt-2 mb-4">Nordic Watcher</h1>
     <p class="text-center">Here are the spots available for the next 10 days:</p>
-    <div class="progress">
-        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+    <div class="progress" id="progressBar">
+        <div id="progressBarValue" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
     </div>      
-    <table class="table table-hover table-bordered">
+    <table id="tableWithAppointments" class="table table-hover table-bordered">
         <caption id="date">
             <script>
                 var date = new Date();
