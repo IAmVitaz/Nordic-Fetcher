@@ -13,13 +13,12 @@
 
             socket.connect('https://localhost');
             socket.on("connect", function() {
-                console.log("Connected")
+                // console.log("Connected")
                 socketId = socket.id;
-                console.log("SocketId: " + socketId)
                 loadAppointments();
             })
             socket.on("update progress", function(percentage){
-                console.log("Got percent: " + percentage)
+                // console.log("Got percent: " + percentage)
                 progressBarValue.style.width = percentage + "%"
             })
 
@@ -28,6 +27,11 @@
                     method: "POST"
                 }).then(response => {
                     setTimeout(function() {
+                        response.json().then(function(json) {
+                            // Generate table using json received:
+                            var root = document.getElementById("tableContent");
+                            json.forEach(element => root.insertAdjacentHTML('beforebegin', `<tr><td>${element.date}</td><td>${element.time}</td><td>${element.numberOfSpots}</td></tr>`));
+                        });
                         showTable();
                         progressBarValue.style.width = "0%";
                     }, 0);
@@ -74,15 +78,8 @@
             <th scope="col">№ spots</th>
           </tr>
         </thead>
-        {% for apt in appointments %} 
-        <tbody>
-          <tr>
-            <td>{{ apt.date }}</td>
-            <td>{{ apt.time }}</td>
-            <td>{{ apt.numberOfSpots }}</td>
-          </tr>
+        <tbody id="tableContent">
         </tbody>
-        {% endfor %} 
     </table>
 </div>
 {% endblock %}
