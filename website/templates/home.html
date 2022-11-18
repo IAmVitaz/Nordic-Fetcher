@@ -11,8 +11,8 @@
             let progressBar = document.getElementById("progressBar")
             let table = document.getElementById("tableWithAppointments")
 
-            socket.connect('https://localhost');
-            // socket.connect('http://nordic-watcher.herokuapp.com');
+            // socket.connect('https://localhost');
+            socket.connect('http://nordic-watcher.herokuapp.com');
             socket.on("connect", function() {
                 // console.log("Connected")
                 socketId = socket.id;
