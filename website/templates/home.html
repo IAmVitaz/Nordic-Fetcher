@@ -1,10 +1,77 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %} 
+
 <div>
-    <h1 class="text-center text-primary mt-2 mb-4">Nordic Watcher</h1>
+    <script type="text/javascript">
+        window.onload = function() {
+            const socket = io();
+            let socketId = undefined;
+            let progressBarValue = document.getElementById("progressBarValue")
+            let progressBar = document.getElementById("progressBar")
+            let table = document.getElementById("tableWithAppointments")
+
+            // socket.connect('https://localhost');
+            socket.connect('http://nordic-watcher.herokuapp.com');
+            socket.on("connect", function() {
+                // console.log("Connected")
+                socketId = socket.id;
+                loadAppointments();
+            })
+            socket.on("update progress", function(percentage){
+                // console.log("Got percent: " + percentage)
+                progressBarValue.style.width = percentage + "%"
+            })
+
+            function loadAppointments() {
+                fetch("/load_appointments/" + socketId, {
+                    method: "POST"
+                }).then(response => {
+                    setTimeout(function() {
+                        response.json().then(function(json) {
+                            // Generate table using json received:
+                            var root = document.getElementById("tableContent");
+                            var lastDate = ""
+                            var isEven = false
+                            json.forEach(function(element) {
+                                var currentDateValue = ""
+                                // Here we hide date if repeated and change color for different days
+                                if (element.date !== lastDate) {
+                                    currentDateValue = element.date
+                                    isEven = !isEven
+                                } else {
+                                    currentDateValue = ""
+                                }
+                                root.insertAdjacentHTML('beforebegin', `<tr class="${isEven ? "table-info" : "table-primary" }"><td>${currentDateValue}</td><td class="text-center">${element.time}</td><td class="text-center">${element.numberOfSpots}</td></tr>`);
+                                lastDate = element.date;
+                            });
+                        });
+                        showTable();
+                        progressBarValue.style.width = "0%";
+                    }, 0);
+                });
+            } 
+
+            function showProgress() {
+                progressBar.style.display = "flex"
+                table.style.display = "none"
+            } 
+
+            function showTable() {
+                progressBar.style.display = "none"
+                table.style.display = "table"
+            } 
+
+            showProgress();
+        }
+    </script>    
+
+    <h1 id="resource-name" class="text-center text-primary mt-2 mb-4">Nordic Watcher</h1>
     <p class="text-center">Here are the spots available for the next 10 days:</p>
-    <table class="table table-hover table-bordered">
+    <div class="progress" id="progressBar">
+        <div id="progressBarValue" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+    </div>      
+    <table id="tableWithAppointments" class="table table-responsive-sm table-hover table-borderless mx-auto" >
         <caption id="date">
             <script>
                 var date = new Date();
@@ -21,19 +88,12 @@
         <thead class="table-dark">
           <tr>
             <th scope="col">Date</th>
-            <th scope="col">Time</th>
-            <th scope="col">№ spots</th>
+            <th class="text-center" scope="col">Time</th>
+            <th class="text-center" scope="col">№ spots</th>
           </tr>
         </thead>
-        {% for apt in appointments %} 
-        <tbody>
-          <tr>
-            <td>{{ apt.date }}</td>
-            <td>{{ apt.time }}</td>
-            <td>{{ apt.numberOfSpots }}</td>
-          </tr>
+        <tbody id="tableContent">
         </tbody>
-        {% endfor %} 
     </table>
 </div>
 {% endblock %}

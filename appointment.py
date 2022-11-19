@@ -3,3 +3,7 @@ class Appointment:
     self.date = date
     self.time = time
     self.numberOfSpots = numberOfSpots
+
+  def to_dict(self):
+    return {"date": self.date, "time": self.time, "numberOfSpots": self.numberOfSpots}
+

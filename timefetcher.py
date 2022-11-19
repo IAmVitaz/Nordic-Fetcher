@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, date
 from typing import List
+from flask_socketio import SocketIO
 
 from appointment import Appointment
 
@@ -12,7 +13,7 @@ class TimeFetcher:
     def dateToStr(self, date: datetime) -> str:
         return date.strftime('%Y-%m-%d')
 
-    def getAvailableTimeSlots(self) -> list[Appointment]:
+    def getAvailableTimeSlots(self, socketio: SocketIO, socketId: str) -> list[Appointment]:
 
         today = datetime.today()
         tomorrow = today + timedelta(days=self._dateShift)
@@ -26,6 +27,8 @@ class TimeFetcher:
 
         query = {'action':'availableTimes', 'showSelect':'0', 'fulldate':'1', 'owner':'18896876'}
 
+        numberOfDates = len(datesToFetch)
+        currentDate = 1
 
         for date in datesToFetch:
             data = {'type':'15360506', 'calendar':'3581411', 'date': date, 'ignoreAppointment':''}
@@ -41,6 +44,9 @@ class TimeFetcher:
                 spotsAvailable = dataPoint['data-available']
                 appointment = Appointment(date=date, time=time, numberOfSpots=spotsAvailable)
                 availableAppointments.append(appointment)
+            if (socketio):
+                socketio.emit("update progress", (currentDate / numberOfDates) * 100, to=socketId)
+            currentDate += 1
 
         output = ""
 
