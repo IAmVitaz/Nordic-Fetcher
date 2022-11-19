@@ -31,7 +31,20 @@
                         response.json().then(function(json) {
                             // Generate table using json received:
                             var root = document.getElementById("tableContent");
-                            json.forEach(element => root.insertAdjacentHTML('beforebegin', `<tr><td>${element.date}</td><td>${element.time}</td><td>${element.numberOfSpots}</td></tr>`));
+                            var lastDate = ""
+                            var isEven = false
+                            json.forEach(function(element) {
+                                var currentDateValue = ""
+                                // Here we hide date if repeated and change color for different days
+                                if (element.date !== lastDate) {
+                                    currentDateValue = element.date
+                                    isEven = !isEven
+                                } else {
+                                    currentDateValue = ""
+                                }
+                                root.insertAdjacentHTML('beforebegin', `<tr class="${isEven ? "table-info" : "table-primary" }"><td>${currentDateValue}</td><td class="text-center">${element.time}</td><td class="text-center">${element.numberOfSpots}</td></tr>`);
+                                lastDate = element.date;
+                            });
                         });
                         showTable();
                         progressBarValue.style.width = "0%";
@@ -58,7 +71,7 @@
     <div class="progress" id="progressBar">
         <div id="progressBarValue" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
     </div>      
-    <table id="tableWithAppointments" class="table table-hover table-bordered">
+    <table id="tableWithAppointments" class="table table-responsive-sm table-hover table-borderless mx-auto" >
         <caption id="date">
             <script>
                 var date = new Date();
@@ -75,8 +88,8 @@
         <thead class="table-dark">
           <tr>
             <th scope="col">Date</th>
-            <th scope="col">Time</th>
-            <th scope="col">№ spots</th>
+            <th class="text-center" scope="col">Time</th>
+            <th class="text-center" scope="col">№ spots</th>
           </tr>
         </thead>
         <tbody id="tableContent">
