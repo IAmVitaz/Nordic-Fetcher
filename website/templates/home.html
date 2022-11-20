@@ -2,6 +2,16 @@
 {% block title %}Home{% endblock %}
 {% block content %} 
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FZLEG8GZEV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FZLEG8GZEV');
+</script>
+
 <div>
     <script type="text/javascript">
         window.onload = function() {
@@ -33,18 +43,20 @@
                             var root = document.getElementById("tableContent");
                             var lastDate = ""
                             var isEven = false
-                            json.forEach(function(element) {
-                                var currentDateValue = ""
-                                // Here we hide date if repeated and change color for different days
-                                if (element.date !== lastDate) {
-                                    currentDateValue = element.date
-                                    isEven = !isEven
-                                } else {
-                                    currentDateValue = ""
-                                }
-                                root.insertAdjacentHTML('beforebegin', `<tr class="${isEven ? "table-info" : "table-primary" }"><td>${currentDateValue}</td><td class="text-center">${element.time}</td><td class="text-center">${element.numberOfSpots}</td></tr>`);
-                                lastDate = element.date;
-                            });
+                            if (!root.hasChildNodes()) {
+                                json.forEach(function(element) {
+                                    var currentDateValue = ""
+                                    // Here we hide date if repeated and change color for different days
+                                    if (element.date !== lastDate) {
+                                        currentDateValue = element.date
+                                        isEven = !isEven
+                                    } else {
+                                        currentDateValue = ""
+                                    }
+                                    root.insertAdjacentHTML('beforeend', `<tr class="${isEven ? "table-info" : "table-primary" }"><td>${currentDateValue}</td><td class="text-center">${element.time}</td><td class="text-center">${element.numberOfSpots}</td></tr>`);
+                                    lastDate = element.date;
+                                });
+                            }
                         });
                         showTable();
                         progressBarValue.style.width = "0%";
@@ -67,7 +79,7 @@
     </script>    
 
     <h1 id="resource-name" class="text-center text-primary mt-2 mb-4">Nordic Watcher</h1>
-    <p class="text-center">Here are the spots available for the next 10 days:</p>
+    <p class="text-center">Here are the spots available for the next 7 days:</p>
     <div class="progress" id="progressBar">
         <div id="progressBarValue" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
     </div>      
@@ -92,8 +104,7 @@
             <th class="text-center" scope="col">№ spots</th>
           </tr>
         </thead>
-        <tbody id="tableContent">
-        </tbody>
+        <tbody id="tableContent"></tbody>
     </table>
 </div>
 {% endblock %}

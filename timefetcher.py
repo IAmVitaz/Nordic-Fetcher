@@ -8,7 +8,7 @@ from appointment import Appointment
 
 class TimeFetcher:
     def __init__(self):
-        self._dateShift = 10
+        self._dateShift = 7
 
     def dateToStr(self, date: datetime) -> str:
         return date.strftime('%Y-%m-%d')
